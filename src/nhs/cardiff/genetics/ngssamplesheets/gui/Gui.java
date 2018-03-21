@@ -46,7 +46,7 @@ public class Gui extends Menu {
 		
 		//**************** FRAME ****************
 		// CREATE FRAME
-		JFrame frame = new JFrame("NGS Sample Sheet Generator - Version 1.3");
+		JFrame frame = new JFrame("NGS Sample Sheet Generator - Version 1.4.1");
 		frame.setJMenuBar(menuBar);
 		// Add mainpanel which contains all subpanels
 		frame.add(mainPanel());

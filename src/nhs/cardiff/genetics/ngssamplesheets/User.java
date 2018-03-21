@@ -32,7 +32,7 @@ public class User {
 		}else if(userName.equalsIgnoreCase("an090758")){
 			userName = "Andrew Roberts";
 		}else if(userName.equalsIgnoreCase("an091966")){
-			userName = "Andrew Senior Lémaitre";
+			userName = "Andrew Senior";
 		}else if(userName.equalsIgnoreCase("AN081300")){
 			userName = "Angharad Williams";
 		}else if(userName.equalsIgnoreCase("Ar085219")){
@@ -70,9 +70,9 @@ public class User {
 		}else if(userName.equalsIgnoreCase("La086380")){
 			userName = "Laura Ferguson";
 		}else if(userName.equalsIgnoreCase("Ma092872")){
-			userName = "Margarita Cobreros Ugidos";
+			userName = "Margarita CobrerosUgidos";
 		}else if(userName.equalsIgnoreCase("Ma124406")){
-			userName = "Maria del Rosario Aguirre Mendoza";
+			userName = "Maria Mendoza";
 		}else if(userName.equalsIgnoreCase("Ma081714")){
 			userName = "Matt Lyon";
 		}else if(userName.equalsIgnoreCase("Me093338")){

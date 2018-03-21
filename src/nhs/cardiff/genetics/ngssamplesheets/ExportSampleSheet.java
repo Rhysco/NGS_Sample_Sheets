@@ -33,7 +33,7 @@ public class ExportSampleSheet {
 	private String brcaPipeline;
 	private String tamPipeline;
 	private int crukRow;
-	private int crukAnRow;
+	//private int crukAnRow;
 	private int truRow;
 	private int truOneRow;
 	private int tamRow;
@@ -43,7 +43,7 @@ public class ExportSampleSheet {
 		properties();
 		filepath = "";
 		crukRow = 17;
-		crukAnRow = 28;
+		//crukAnRow = 28;
 		truRow = 14;
 		truOneRow = 17;
 		tamRow = 14;
@@ -59,19 +59,22 @@ public class ExportSampleSheet {
 	 */
 	public void selectExport(Worksheet ws, ArrayList<Index> index, String test) throws IOException{
 		if(test.equalsIgnoreCase("NEXTERA NGS")){
-			exportCRUKTAM(ws, index, "CRUK", crukRow, "L:\\SampleSheetTemplates\\TemplatesForAuto\\CRUK-SeqOnly.xls");
-			exportCRUKTAM(ws, index, "ANALYSIS", crukAnRow, "L:\\SampleSheetTemplates\\TemplatesForAuto\\CRUK-analysis.xls");
+			// OLD SINGLE INDEX
+			//exportCRUKTAM(ws, index, "CRUK", crukRow, "Y:\\samplesheet-templates\\CRUK-SeqOnly.xls");
+			exportCRUKTAM(ws, index, "CRUK", crukRow, "Y:\\samplesheet-templates\\CRUK-SeqOnly-DualIndex.xls");
+			// ANALYSIS SHEET NO LONGER REQUIRED
+			//exportCRUKTAM(ws, index, "ANALYSIS", crukAnRow, "Y:\\samplesheet-templates\\CRUK-analysis.xls");
 		}else if(test.equalsIgnoreCase("TruSight Cancer")){
-			exportTrusight(ws, index, "TRUSIGHT", truRow, "L:\\SampleSheetTemplates\\TemplatesForAuto\\Trusight.xls");
+			exportTrusight(ws, index, "TRUSIGHT", truRow, "Y:\\samplesheet-templates\\Trusight.xls");
 		}else if(test.equalsIgnoreCase("TruSight One CES panel")){
-			exportTrusight(ws, index, "TRUSIGHTONE", truOneRow, "L:\\SampleSheetTemplates\\TemplatesForAuto\\TrusightOne.xls");
+			exportTrusight(ws, index, "TRUSIGHTONE", truOneRow, "Y:\\samplesheet-templates\\TrusightOne.xls");
 		}else if (test.equalsIgnoreCase("TAM panel") && test.equalsIgnoreCase("CRM panel")){
 			// COMBINED ONE HERE... SEE OVERLOADED METHOD
 			// HERE IN CASE ITS NEEDED
 		}else if(test.equalsIgnoreCase("TAM panel")){
-			exportCRUKTAM(ws, index, "TAM", tamRow, "L:\\SampleSheetTemplates\\TemplatesForAuto\\TAMGeneRead.xls");
+			exportCRUKTAM(ws, index, "TAM", tamRow, "Y:\\samplesheet-templates\\TAMGeneRead.xls");
 		}else if(test.equalsIgnoreCase("CRM panel")){
-			exportWCB(ws, index, "CRM", wcbRow, "L:\\SampleSheetTemplates\\TemplatesForAuto\\WCB.xls");		
+			exportWCB(ws, index, "CRM", wcbRow, "Y:\\samplesheet-templates\\WCB.xls");		
 		}	
 	}	
 
@@ -83,8 +86,10 @@ public class ExportSampleSheet {
 	 */
 	public void selectExport(ArrayList<Worksheet> worksheets,ArrayList<Index> index) throws IOException {
 		// uses WCB sheet for combined sheets
-		exportCombined(worksheets, index, "CRM", wcbRow, "L:\\SampleSheetTemplates\\TemplatesForAuto\\WCB.xls");
-	}	
+		exportCombined(worksheets, index, "CRM", wcbRow, "Y:\\samplesheet-templates\\WCB.xls");
+	}
+	
+	
 
 	/**
 	 * @category Loads pipeline properties for the generator
@@ -92,7 +97,7 @@ public class ExportSampleSheet {
 	private void properties(){
 		Properties properties = new Properties();
 		try {
-		  properties.load(new FileInputStream("L:\\Auto NGS Sample sheets\\pipelines.properties"));
+		  properties.load(new FileInputStream("Y:\\samplesheet-templates\\pipelines.properties"));
 		  trusightPipeline = properties.getProperty("TRUSIGHT");
 		  trusightOnePipeline = properties.getProperty("TRUSIGHTONE");
 		  focus4Pipeline = properties.getProperty("FOCUS4");
@@ -185,24 +190,29 @@ public class ExportSampleSheet {
 					cell = row.createCell(2);
 					cell.setCellValue(ws.getWorksheet().get(i));
 					
-					// INDEXES HERE WHEN NEW SAMPLE SHEETS ARE DESIGNED
-					// UNCOMMENT WHEN READY FOR LIVE
-//					for (Index ind : index) {
-						// INDEX NAME
-//						cell = row.createCell(5);
-//						if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE501().toString())){
-//							cell.setCellValue("E501");
-//						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE502().toString())){
-//							cell.setCellValue("E502");
-//						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE504().toString())){
-//							cell.setCellValue("E504");
-//						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE505().toString())){
-//							cell.setCellValue("E505");
-//						}
-						// INDEX BASES
-//						cell = row.createCell(6);
-//						cell.setCellValue(ind.getIndexSelect().toString());
-//					}
+					// DUAL INDEXES FOR CRUK
+					for (Index ind : index) {
+						 //INDEX NAME
+						cell = row.createCell(6);
+						if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE501().toString())){
+							cell.setCellValue("E501");
+						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE502().toString())){
+							cell.setCellValue("E502");
+						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE503().toString())){
+							cell.setCellValue("E503");
+						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE504().toString())){
+							cell.setCellValue("E504");
+						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE505().toString())){
+							cell.setCellValue("E505");
+						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE506().toString())){
+							cell.setCellValue("E506");
+						}else if(ind.getIndexSelect().toString().equalsIgnoreCase(ind.getE517().toString())){
+							cell.setCellValue("E517");
+						}
+						 //INDEX BASES
+						cell = row.createCell(7);
+						cell.setCellValue(ind.getIndexSelect().toString());
+					}
 
 
 				}else if(select.equalsIgnoreCase("TAM")){

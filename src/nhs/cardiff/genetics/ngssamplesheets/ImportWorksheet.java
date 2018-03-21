@@ -10,11 +10,6 @@ package nhs.cardiff.genetics.ngssamplesheets;
  * 
  */
 
-// ADDED GENEREAD POOLED TO DEAL WITH WORKSHEET HOOD MADE - MIGHT BE THIS WAY FROM NOW ON FOR TAM/WCB SAMPLES.
-// MAKE A BIT BETTER AND GET ALL THE PIPELINE DATA COMING OUT OK.
-// TEST ON WORKSHEET 17-6714 (Generead pooled)
-// HOODS W/S
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -100,6 +95,7 @@ public class ImportWorksheet {
 		user = System.getProperty("user.name");
 		go = checkInputShire(input);
 		User getUser = new User(user);
+		boolean done = false;
 
 		if (go) {
 			Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
@@ -151,17 +147,20 @@ public class ImportWorksheet {
 				st2.setString(1, ws.getLabNo().get(ws.getLabNo().size() - 1));
 				if (goNGS && ws.getLabNo() != null) {
 					ResultSet rs2 = st2.executeQuery();
+					done = false;
 					while (rs2.next()) {
 						String temp = rs2.getString("TEST");
 						// Check is the test is actually NGS and not MLPA etc
 						// As we only want the comments from the NGS ones.
-						if(temp.equalsIgnoreCase("Trusight Cancer")
-								|| temp.equalsIgnoreCase("TruSight One CES panel")
-								|| temp.equalsIgnoreCase("TAM panel")
-								|| temp.equalsIgnoreCase("CRM panel")
-								|| temp.equalsIgnoreCase("GeneRead pooled")){
+						if(temp.equalsIgnoreCase("Trusight Cancer") && (done == false)
+								|| temp.equalsIgnoreCase("TruSight One CES panel") && (done == false)
+								|| temp.equalsIgnoreCase("TAM panel") && (done == false)
+								|| temp.equalsIgnoreCase("CRM panel") && (done == false)
+								|| temp.equalsIgnoreCase("BRCA panel") && (done == false)
+								|| temp.equalsIgnoreCase("GeneRead pooled") && (done == false)){
 							ws.setPanel(temp);
-							ws.setComments(rs2.getString("COMMENTS"));	
+							ws.setComments(rs2.getString("COMMENTS"));
+							done = true;
 						}
 					}	
 				} else if (!goNGS) {
@@ -202,6 +201,7 @@ public class ImportWorksheet {
 				|| (test.equals("TruSight One CES panel"))
 				|| (test.equals("TAM panel"))
 				|| (test.equals("CRM panel"))
+				|| (test.equals("BRCA panel"))
 				|| (test.equals("GeneRead pooled"))) {
 			goNGS = true;
 		} else {
