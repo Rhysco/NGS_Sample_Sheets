@@ -3,7 +3,6 @@
  */
 package nhs.cardiff.genetics.ngssamplesheets.gui;
 import javax.mail.MessagingException;
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 
@@ -16,22 +15,18 @@ import javax.swing.SwingUtilities;
 public class Main {
 
 	/**
-	 * @param args None
+	 * 
+	 * @param args
+	 * @throws InterruptedException
+	 * @throws MessagingException
 	 */
 	public static void main(String[] args) throws InterruptedException, MessagingException {
+
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-
-				JFrame frame = new MainFrame("NGS Sample Sheet Generator - Version 1.2");
 				@SuppressWarnings("unused")
-				Menu topMenu = new Menu(frame);
-				frame.setSize(400, 200);
-				frame.setDefaultCloseOperation(3);
-				frame.setVisible(true);
-				frame.setLocationRelativeTo(null);
-				frame.setResizable(false);
-				
+				Controller control = new Controller();
 			}
-		});
+		});	
 	}
 }

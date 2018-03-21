@@ -1,81 +1,52 @@
 package nhs.cardiff.genetics.ngssamplesheets.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JFrame;
+import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-
 /**
  * @author Rhys Cooper
- * @Date 09/08/2017
- * @version 1.2
+ * @Date 14/08/2017
+ * @version 1.3
  * 
  */
-public class Menu extends JMenuBar{
+public class Menu {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private JMenu wsNo = new JMenu();
+	private JMenu options = new JMenu();
+	private JMenu combine = new JMenu();
+	JMenuItem ws1 = new JMenuItem();
+	JMenuItem ws2 = new JMenuItem();
+	JMenuItem ws3 = new JMenuItem();
+	JMenuItem ws4 = new JMenuItem();
+	JCheckBox combineYes = new JCheckBox("Yes");
+	JCheckBox combineNo = new JCheckBox("No");
+	JMenuBar menuBar = new JMenuBar();
 
-	/**
-	 * CONSTRUCTOR
-	 * @param frame 
-	 * 
-	 * I5_Index_ID	index2
-	 * E501			TAGATCGC
-	 * E502			CTCTCTAT 
-	 * E504			AGAGTAGA
-	 * E505			GTAAGGAG
-	 * 
-	 */
-	public Menu(JFrame frame){
-		
+	public Menu(){
 		// WORKSHEET SUBMENU
-		JMenu wsNo = new JMenu("Worksheets");
-		JMenuItem ws1 = new JMenuItem("1 Worksheet");
-		JMenuItem ws2 = new JMenuItem("2 Worksheet");
-		JMenuItem ws3 = new JMenuItem("3 Worksheet");
+		wsNo = new JMenu("Worksheets");
+		ws1 = new JMenuItem("1 Worksheet");
+		ws2 = new JMenuItem("2 Worksheets");
+		ws3 = new JMenuItem("3 Worksheets");
+		ws4 = new JMenuItem("4 Worksheets");
 		wsNo.add(ws1);
 		wsNo.add(ws2);
 		wsNo.add(ws3);
-	
-		// INDEX SUBMENU
-		JMenu indexSelect = new JMenu("Index's");
-		JMenuItem index1 = new JMenuItem("E501");
-		JMenuItem index2 = new JMenuItem("E502");
-		JMenuItem index3 = new JMenuItem("E504");
-		JMenuItem index4 = new JMenuItem("E505");
-		indexSelect.add(index1);
-		indexSelect.add(index2);
-		indexSelect.add(index3);
-		indexSelect.add(index4);
+		wsNo.add(ws4);	
 		
+		// COMBINE SUBMENU
+		combine = new JMenu("Combine");
+		combine.add(combineYes);
+		combine.add(combineNo);
+
 		// MAIN MENU ITEM
-		JMenu options = new JMenu("Options");
+		options = new JMenu("Options");
 		options.add(wsNo);
-		options.add(indexSelect);
+		options.add(combine);
 		
 		// MAIN MENU BAR
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.add(options);
-		frame.setJMenuBar(menuBar);	
-		
-		// Action listeners for menu options
-		index1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					GuiInterface gi = new Gui();
-					gi.infoUpdate("E501");
-				} catch (Exception localException) {
-				// DO STUFF	
-				}
-			}
-
-		});	
+		menuBar.add(options);	
 	}
 }

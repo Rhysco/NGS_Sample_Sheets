@@ -5,8 +5,8 @@ package nhs.cardiff.genetics.ngssamplesheets;
 
 /**
  * @author Rhys Cooper
- * @Date 17/02/2017
- * @version 1.2
+ * @Date 14/08/2017
+ * @version 1.3
  * 
  */
 
@@ -15,7 +15,7 @@ package nhs.cardiff.genetics.ngssamplesheets;
 // TEST ON WORKSHEET 17-6714 (Generead pooled)
 // HOODS W/S
 
-
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,24 +23,17 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 public class ImportWorksheet {
-	private ArrayList<String> worksheet = new ArrayList<String>();
-	private ArrayList<String> selectGenes = new ArrayList<String>();
-	private String selectGenesTemp;
-	private String[] results;
-	private String[] results2;
+	private ArrayList<Worksheet> worksheets = new ArrayList<Worksheet>();
 	private String db;
 	private String url;
 	private String user;
+	private String test;
 	private boolean go;
 	private boolean goNGS;
 
 	public ImportWorksheet() {
-		results = new String[6];
-		results2 = new String[2];
 		go = false;
 		goNGS = false;
 		db = "M:\\Pyrosequencing\\Pyrosequencing Service\\PCR & PYRO spreadsheets\\Log\\IT\\SHIRE COPY FOR PYRO.MDB";
@@ -49,16 +42,64 @@ public class ImportWorksheet {
 	
 	/**
 	 * 
-	 * @param worksheetInput The input from the user
-	 * @param infoField JLabel field for feedback information
-	 * @param inputField JTextField for user input
-	 * @throws Exception Thrown is connection to Shire fails
+	 * @param input The input strings provided by the user
+	 * @param index The indexes selected by the user
+	 * @param combine Boolean, true if user wishes to combine worksheets into one output file
+	 * @throws Exception Throws exception if the input string is not a valid shire or NGS worksheet
 	 */
-	public void imports(String worksheetInput, JLabel infoField, JTextField inputField) throws Exception {
+	public void process(ArrayList<String> input, ArrayList<Index> index, Boolean combine) throws Exception{
+		ExportSampleSheet export = new ExportSampleSheet();
+		// reduce input down to amount of worksheets selected
+		// don't need this null removal? Test...
+		input.remove(null);
+		for (int i = 0; i < input.size(); i++) {
+			Worksheet ws = new Worksheet();
+			importShire(ws, input.get(i).toString());
+			worksheets.add(ws);
+		}	
+		if(combine == true){			
+			combine(worksheets, index);		
+		}else if(combine == false){	
+			for (Worksheet ws : worksheets) {
+				for (int i = 0; i < ws.getTest().size(); i++) {
+					test = ws.getTest().get(i);
+				}
+				export.selectExport(ws, index, test);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param worksheets ArrayList of worksheet objects
+	 * @param index The indexes selected by the user
+	 * @throws IOException Throws exception if the input string is not a valid shire or NGS worksheet
+	 */
+	private void combine(ArrayList<Worksheet> worksheets, ArrayList<Index> index) throws IOException{
 		
 		ExportSampleSheet export = new ExportSampleSheet();
+		export.selectExport(worksheets, index);
+
+
+		// To get test details, dont think its needed for combined sheets
+//		for (Worksheet ws : worksheets) {
+//			for (int i = 0; i < ws.getTest().size(); i++) {
+//				test = ws.getTest().get(i);
+//			}
+//		}
+	}
+
+	/**
+	 * 
+	 * @param ws The worksheet object
+	 * @param input The input string provided by the user
+	 * @throws Exception Throws exception if the input string is not a valid shire or NGS worksheet
+	 */
+	private void importShire(Worksheet ws, String input) throws Exception{
+		
 		user = System.getProperty("user.name");
-		go = checkInputShire(worksheetInput);
+		go = checkInputShire(input);
+		User getUser = new User(user);
 
 		if (go) {
 			Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
@@ -69,18 +110,18 @@ public class ImportWorksheet {
 					+ " DNA_WORKSHEET_DET.LABNO,"
 					+ " DNA_Worksheet.WORKSHEET,"
 					+ " DNA_Worksheet.UPDATEDBY,"
-					+ " DNA_WORKSHEET_DET.WORKSHEET FROM"
-					+ " (DNA_Worksheet LEFT JOIN DNA_TEST ON"
-					+ " DNA_Worksheet.TEST = DNA_TEST.TEST)"
-					+ " INNER JOIN DNA_WORKSHEET_DET ON"
-					+ " DNA_Worksheet.WORKSHEET ="
 					+ " DNA_WORKSHEET_DET.WORKSHEET"
-					+ " WHERE (((DNA_Worksheet.WORKSHEET)"
-					+ "=[DNA_WORKSHEET_DET].[WORKSHEET])"
-					+ " AND ((DNA_WORKSHEET_DET.WORKSHEET)"
-					+ "=?)) ORDER BY DNA_WORKSHEET_DET.POSITION ASC;");
+					+ " FROM (DNA_Worksheet"
+					+ " LEFT JOIN DNA_TEST"
+					+ " ON DNA_Worksheet.TEST = DNA_TEST.TEST)"
+					+ " INNER JOIN DNA_WORKSHEET_DET"
+					+ " ON DNA_Worksheet.WORKSHEET = DNA_WORKSHEET_DET.WORKSHEET"
+					+ " WHERE (((DNA_Worksheet.WORKSHEET)=[DNA_WORKSHEET_DET].[WORKSHEET])"
+					+ " AND ((DNA_WORKSHEET_DET.WORKSHEET)=?))"
+					+ " ORDER BY DNA_WORKSHEET_DET.POSITION ASC;");
+			
 
-			st.setString(1, worksheetInput);
+			st.setString(1, input);
 
 			PreparedStatement st2 = conn.prepareStatement("SELECT DISTINCTROW DNALAB_TEST.*,"
 					+ " DNALAB_TEST.TEST,"
@@ -89,66 +130,49 @@ public class ImportWorksheet {
 
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
-				results[0] = rs.getString("LABNO");
-				results[1] = rs.getString("WORKSHEET");
-				results[2] = rs.getString("POSITION");
-				// Removed worksheet by and replaced by username from Nadex, see checkName method
-				//results[3] = rs.getString("WORKSHEET_BY");
-				results[3] = checkName(user);
-				results[4] = rs.getString("TEST");
-				// Take just the date and replace some characters.
-				results[5] = rs.getString("UPDATEDDATE").substring(2, 10).replace("-", "/");
-
-				goNGS = checkInputNGS(results[4]);
-
-				if (goNGS) {
-					if (results[0] != null) {
-
-						st2.setString(1, results[0].toString());
-						ResultSet rs2 = st2.executeQuery();
-						while (rs2.next()) {
-							results2[0] = rs2.getString("TEST");
-							results2[1] = rs2.getString("COMMENTS");
-							if ((results2[0].equalsIgnoreCase("Trusight Cancer"))
-									|| (results2[0].equalsIgnoreCase("TruSight One CES panel"))
-									|| (results2[0].equalsIgnoreCase("TAM panel"))
-									|| (results2[0].equalsIgnoreCase("CRM panel"))
-									|| (results2[0].equalsIgnoreCase("GeneRead pooled"))){
-								selectGenesTemp = results2[1];
-							}
+				ws.setWorksheet(rs.getString("WORKSHEET").toString());
+				String spaceFix = rs.getString("LABNO");
+				// Remove whitespace, weird bug for only some labno returns...
+				// Don't know why!?
+				try {
+					spaceFix = spaceFix.replace(" ", "");
+				} catch (Exception e) {
+					// No need to do anything, just means no spaces in the string
+				}
+				ws.setLabNo(spaceFix);
+				ws.setPosition(rs.getString("POSITION"));
+				ws.setUser(getUser.getUser().toString());
+				ws.setTest(rs.getString("TEST"));
+				ws.setUpdateDate(rs.getString("UPDATEDDATE").substring(2, 10).replace("-", "/"));
+		
+				// Check if NGS worksheet
+				// Gets size - 1 to pick to the last entry
+				goNGS = checkInputNGS(ws.getTest().get(ws.getTest().size() - 1));
+				st2.setString(1, ws.getLabNo().get(ws.getLabNo().size() - 1));
+				if (goNGS && ws.getLabNo() != null) {
+					ResultSet rs2 = st2.executeQuery();
+					while (rs2.next()) {
+						String temp = rs2.getString("TEST");
+						// Check is the test is actually NGS and not MLPA etc
+						// As we only want the comments from the NGS ones.
+						if(temp.equalsIgnoreCase("Trusight Cancer")
+								|| temp.equalsIgnoreCase("TruSight One CES panel")
+								|| temp.equalsIgnoreCase("TAM panel")
+								|| temp.equalsIgnoreCase("CRM panel")
+								|| temp.equalsIgnoreCase("GeneRead pooled")){
+							ws.setPanel(temp);
+							ws.setComments(rs2.getString("COMMENTS"));	
 						}
-
-						for (int i = 0; i < results.length; i++) {
-							worksheet.add(results[i]);
-						}
-
-						selectGenes.add(selectGenesTemp);
-						selectGenesTemp = "";
-					}
+					}	
 				} else if (!goNGS) {
-					infoField.setVisible(true);
-					infoField.setText("Not a Valid NGS worksheet, please try again");
-					inputField.setText("");
+					Exception ex = new Exception("Not a Valid NGS worksheet, please try again");
+					throw ex;
 				}
 			}
 		} else if (!go) {
-			infoField.setVisible(true);
-			infoField.setText("Not a valid shire worksheet, please try again");
-			inputField.setText("");
+			Exception ex = new Exception("Not a valid shire worksheet, please try again");
+			throw ex;
 		}
-
-		if ((worksheet.get(4)).equalsIgnoreCase("NEXTERA NGS")) {
-			export.exportCRUK(worksheet, infoField);
-			export.exportCRUKAnalysis(worksheet, infoField);
-		} else if ((worksheet.get(4)).equalsIgnoreCase("TruSight Cancer")){
-			export.exportTrusight(worksheet, selectGenes, infoField);
-		} else if ((worksheet.get(4)).equalsIgnoreCase("TruSight One CES panel")){
-			export.exportTrusightOne(worksheet, selectGenes, infoField);
-		} else if ((worksheet.get(4)).equalsIgnoreCase("TAM panel")) {
-			export.exportTAM(worksheet, selectGenes, infoField);
-		} else if ((worksheet.get(4)).equalsIgnoreCase("CRM panel") || worksheet.get(4).equalsIgnoreCase("GeneRead pooled")) {
-			export.exportWCB(worksheet, selectGenes, infoField);
-		} 
 	}
 
 	/**
@@ -156,7 +180,7 @@ public class ImportWorksheet {
 	 * @param worksheetInput The input from the user
 	 * @return true if input valid Shire worksheet
 	 */
-	public boolean checkInputShire(String worksheetInput) {
+	private boolean checkInputShire(String worksheetInput) {
 		String filter = "(^\\d{1,2}[-]\\d{1,5})";
 		Pattern pattern = Pattern.compile(filter, 2);
 		Matcher matcher = pattern.matcher(worksheetInput);
@@ -169,10 +193,10 @@ public class ImportWorksheet {
 
 	/**
 	 * 
-	 * @param test String denoting the name of the test
+	 * @param arrayList String denoting the name of the test
 	 * @return true if test a valid NGS test
 	 */
-	public boolean checkInputNGS(String test) {
+	private boolean checkInputNGS(String test) {
 		if ((test.equals("NEXTERA NGS"))
 				|| (test.equals("TruSight Cancer"))
 				|| (test.equals("TruSight One CES panel"))
@@ -184,49 +208,5 @@ public class ImportWorksheet {
 			goNGS = false;
 		}
 		return goNGS;
-	}
-	
-	/**
-	 * 
-	 * @param user String denoting Nadex computer logon name of the user
-	 * @return String user based on the logon name - changed to initials
-	 */
-	public String checkName(String user){
-		
-			// Rhys
-		if (user.equalsIgnoreCase("rh086986")){
-			user = "RC";
-			// JP
-		} else if(user.equalsIgnoreCase("ja083828")){
-			user = "JH";
-			// Adrianne
-		} else if(user.equalsIgnoreCase("ad090609")){
-			user = "AD";
-			// Dil
-		} else if(user.equalsIgnoreCase("di083948")){
-			user = "DM";
-			// Becky Harris
-		} else if(user.equalsIgnoreCase("re095323")){
-			user = "RH";
-			// Andrew
-		} else if(user.equalsIgnoreCase("an090758")){
-			user = "AR";
-			// Jenny
-		} else if(user.equalsIgnoreCase("Je091739")){
-			user = "JHW";
-			// Rogan
-		} else if(user.equalsIgnoreCase("Ro090332")){
-			user = "RV";
-			// Megan
-		} else if(user.equalsIgnoreCase("Me093338")){
-			user = "MF";
-			// Becky Weiser
-		} else if(user.equalsIgnoreCase("Re093772")){
-			user = "BW";
-			// Everyone else
-		} else{
-			user = "Unknown";
-		}
-		return user;
 	}
 }
