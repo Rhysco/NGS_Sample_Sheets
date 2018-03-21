@@ -6,9 +6,16 @@ package nhs.cardiff.genetics.ngssamplesheets;
 /**
  * @author Rhys Cooper
  * @Date 17/02/2017
- * @version 1.1.1
+ * @version 1.2
  * 
  */
+
+// ADDED GENEREAD POOLED TO DEAL WITH WORKSHEET HOOD MADE - MIGHT BE THIS WAY FROM NOW ON FOR TAM/WCB SAMPLES.
+// MAKE A BIT BETTER AND GET ALL THE PIPELINE DATA COMING OUT OK.
+// TEST ON WORKSHEET 17-6714 (Generead pooled)
+// HOODS W/S
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -104,7 +111,9 @@ public class ImportWorksheet {
 							results2[1] = rs2.getString("COMMENTS");
 							if ((results2[0].equalsIgnoreCase("Trusight Cancer"))
 									|| (results2[0].equalsIgnoreCase("TruSight One CES panel"))
-									|| (results2[0].equalsIgnoreCase("TAM panel"))){
+									|| (results2[0].equalsIgnoreCase("TAM panel"))
+									|| (results2[0].equalsIgnoreCase("CRM panel"))
+									|| (results2[0].equalsIgnoreCase("GeneRead pooled"))){
 								selectGenesTemp = results2[1];
 							}
 						}
@@ -137,11 +146,9 @@ public class ImportWorksheet {
 			export.exportTrusightOne(worksheet, selectGenes, infoField);
 		} else if ((worksheet.get(4)).equalsIgnoreCase("TAM panel")) {
 			export.exportTAM(worksheet, selectGenes, infoField);
-		} else if ((worksheet.get(4)).equalsIgnoreCase("CorMal NGS")) {
-			export.exportHaloplex(worksheet, infoField);
-		} else if ((worksheet.get(4)).equalsIgnoreCase("CRM panel")) {
-			export.exportWCB(worksheet, infoField);
-		}
+		} else if ((worksheet.get(4)).equalsIgnoreCase("CRM panel") || worksheet.get(4).equalsIgnoreCase("GeneRead pooled")) {
+			export.exportWCB(worksheet, selectGenes, infoField);
+		} 
 	}
 
 	/**
@@ -170,8 +177,8 @@ public class ImportWorksheet {
 				|| (test.equals("TruSight Cancer"))
 				|| (test.equals("TruSight One CES panel"))
 				|| (test.equals("TAM panel"))
-				|| (test.equals("CorMal NGS"))
-				|| (test.equals("CRM panel"))) {
+				|| (test.equals("CRM panel"))
+				|| (test.equals("GeneRead pooled"))) {
 			goNGS = true;
 		} else {
 			goNGS = false;
@@ -186,28 +193,39 @@ public class ImportWorksheet {
 	 */
 	public String checkName(String user){
 		
-
+			// Rhys
 		if (user.equalsIgnoreCase("rh086986")){
 			user = "RC";
-			//Rhys
+			// JP
 		} else if(user.equalsIgnoreCase("ja083828")){
 			user = "JH";
-			// JP
+			// Adrianne
 		} else if(user.equalsIgnoreCase("ad090609")){
 			user = "AD";
-			// Adrianne
+			// Dil
 		} else if(user.equalsIgnoreCase("di083948")){
 			user = "DM";
-			// Dil
+			// Becky Harris
 		} else if(user.equalsIgnoreCase("re095323")){
 			user = "RH";
-			// Becky
+			// Andrew
 		} else if(user.equalsIgnoreCase("an090758")){
 			user = "AR";
-			// Andrew
+			// Jenny
+		} else if(user.equalsIgnoreCase("Je091739")){
+			user = "JHW";
+			// Rogan
+		} else if(user.equalsIgnoreCase("Ro090332")){
+			user = "RV";
+			// Megan
+		} else if(user.equalsIgnoreCase("Me093338")){
+			user = "MF";
+			// Becky Weiser
+		} else if(user.equalsIgnoreCase("Re093772")){
+			user = "BW";
+			// Everyone else
 		} else{
 			user = "Unknown";
-			// Everyone else
 		}
 		return user;
 	}
