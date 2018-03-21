@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
 /**
  * @author Rhys Cooper
  * @Date 17/02/2017
- * @version 1.0.1
+ * @version 1.1.1
  * 
  */
 public class Main {
@@ -23,7 +23,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JFrame frame = new MainFrame("NGS Sample Sheet Generator - Version 1.0.1");
+				JFrame frame = new MainFrame("NGS Sample Sheet Generator - Version 1.1.3");
 				frame.setSize(400, 200);
 				frame.setDefaultCloseOperation(3);
 				frame.setVisible(true);

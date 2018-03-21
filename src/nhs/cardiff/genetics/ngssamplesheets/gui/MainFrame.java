@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 /**
  * @author Rhys Cooper
  * @Date 17/02/2017
- * @version 1.0.1
+ * @version 1.1.1
  * 
  */
 public class MainFrame extends JFrame {

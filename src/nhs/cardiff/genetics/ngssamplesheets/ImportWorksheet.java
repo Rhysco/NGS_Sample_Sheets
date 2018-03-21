@@ -6,7 +6,7 @@ package nhs.cardiff.genetics.ngssamplesheets;
 /**
  * @author Rhys Cooper
  * @Date 17/02/2017
- * @version 1.0.1
+ * @version 1.1.1
  * 
  */
 import java.sql.Connection;
@@ -32,7 +32,7 @@ public class ImportWorksheet {
 	private boolean goNGS;
 
 	public ImportWorksheet() {
-		results = new String[5];
+		results = new String[6];
 		results2 = new String[2];
 		go = false;
 		goNGS = false;
@@ -89,6 +89,8 @@ public class ImportWorksheet {
 				//results[3] = rs.getString("WORKSHEET_BY");
 				results[3] = checkName(user);
 				results[4] = rs.getString("TEST");
+				// Take just the date and replace some characters.
+				results[5] = rs.getString("UPDATEDDATE").substring(2, 10).replace("-", "/");
 
 				goNGS = checkInputNGS(results[4]);
 
@@ -100,7 +102,9 @@ public class ImportWorksheet {
 						while (rs2.next()) {
 							results2[0] = rs2.getString("TEST");
 							results2[1] = rs2.getString("COMMENTS");
-							if ((results2[0].equalsIgnoreCase("Trusight Cancer")) || (results2[0].equalsIgnoreCase("TAM panel"))) {
+							if ((results2[0].equalsIgnoreCase("Trusight Cancer"))
+									|| (results2[0].equalsIgnoreCase("TruSight One CES panel"))
+									|| (results2[0].equalsIgnoreCase("TAM panel"))){
 								selectGenesTemp = results2[1];
 							}
 						}
@@ -124,16 +128,18 @@ public class ImportWorksheet {
 			inputField.setText("");
 		}
 
-		if (((String) worksheet.get(4)).equalsIgnoreCase("NEXTERA NGS")) {
+		if ((worksheet.get(4)).equalsIgnoreCase("NEXTERA NGS")) {
 			export.exportCRUK(worksheet, infoField);
 			export.exportCRUKAnalysis(worksheet, infoField);
-		} else if (((String) worksheet.get(4)).equalsIgnoreCase("TruSight Cancer")) {
+		} else if ((worksheet.get(4)).equalsIgnoreCase("TruSight Cancer")){
 			export.exportTrusight(worksheet, selectGenes, infoField);
-		} else if (((String) worksheet.get(4)).equalsIgnoreCase("TAM panel")) {
+		} else if ((worksheet.get(4)).equalsIgnoreCase("TruSight One CES panel")){
+			export.exportTrusightOne(worksheet, selectGenes, infoField);
+		} else if ((worksheet.get(4)).equalsIgnoreCase("TAM panel")) {
 			export.exportTAM(worksheet, selectGenes, infoField);
-		} else if (((String) worksheet.get(4)).equalsIgnoreCase("CorMal NGS")) {
+		} else if ((worksheet.get(4)).equalsIgnoreCase("CorMal NGS")) {
 			export.exportHaloplex(worksheet, infoField);
-		} else if (((String) worksheet.get(4)).equalsIgnoreCase("CRM panel")) {
+		} else if ((worksheet.get(4)).equalsIgnoreCase("CRM panel")) {
 			export.exportWCB(worksheet, infoField);
 		}
 	}
@@ -160,8 +166,11 @@ public class ImportWorksheet {
 	 * @return true if test a valid NGS test
 	 */
 	public boolean checkInputNGS(String test) {
-		if ((test.equals("NEXTERA NGS")) || (test.equals("TruSight Cancer"))
-				|| (test.equals("TAM panel")) || (test.equals("CorMal NGS"))
+		if ((test.equals("NEXTERA NGS"))
+				|| (test.equals("TruSight Cancer"))
+				|| (test.equals("TruSight One CES panel"))
+				|| (test.equals("TAM panel"))
+				|| (test.equals("CorMal NGS"))
 				|| (test.equals("CRM panel"))) {
 			goNGS = true;
 		} else {
@@ -181,19 +190,22 @@ public class ImportWorksheet {
 		if (user.equalsIgnoreCase("rh086986")){
 			user = "RC";
 			//Rhys
-		}else if(user.equalsIgnoreCase("ja083828")){
+		} else if(user.equalsIgnoreCase("ja083828")){
 			user = "JH";
 			// JP
-		}else if(user.equalsIgnoreCase("ad090609")){
+		} else if(user.equalsIgnoreCase("ad090609")){
 			user = "AD";
 			// Adrianne
-		}else if(user.equalsIgnoreCase("di083948")){
+		} else if(user.equalsIgnoreCase("di083948")){
 			user = "DM";
 			// Dil
-		}else if(user.equalsIgnoreCase("re095323")){
+		} else if(user.equalsIgnoreCase("re095323")){
 			user = "RH";
 			// Becky
-		}else{
+		} else if(user.equalsIgnoreCase("an090758")){
+			user = "AR";
+			// Andrew
+		} else{
 			user = "Unknown";
 			// Everyone else
 		}

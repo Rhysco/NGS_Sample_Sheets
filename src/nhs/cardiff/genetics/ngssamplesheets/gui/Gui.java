@@ -20,13 +20,14 @@ import nhs.cardiff.genetics.ngssamplesheets.ImportWorksheet;
 /**
  * @author Rhys Cooper
  * @Date 17/02/2017
- * @version 1.0.1
+ * @version 1.1.1
  * 
  */
 public class Gui extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 
 	 * 
 	 */
 	public Gui() {
@@ -36,14 +37,14 @@ public class Gui extends JPanel {
 
 		setBorder(BorderFactory.createTitledBorder(""));
 		JLabel worksheetLabel = new JLabel(
-				"Enter your NGS worksheet number then click run or press enter");
+				"Enter your NGS worksheet number then click go or press enter");
 		final JTextField inputField = new JTextField(8);
 		final JTextField inputFieldTwo = new JTextField(8);
-		JButton WorksheetButton = new JButton("Run");
+		JButton worksheetButton = new JButton("Go");
 		final JLabel infoField = new JLabel(
 				"Non shire worksheets and non-NGS worksheets will be rejected");
 
-		WorksheetButton.setVisible(true);
+		worksheetButton.setVisible(true);
 		inputField.setVisible(true);
 		inputFieldTwo.setVisible(true);
 		inputField.setToolTipText("All NGS Worksheets");
@@ -70,7 +71,7 @@ public class Gui extends JPanel {
 			}
 		});
 		
-		WorksheetButton.addActionListener(new ActionListener() {
+		worksheetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				infoField.setText("");
 				String input = inputField.getText();
@@ -82,7 +83,8 @@ public class Gui extends JPanel {
 				}
 			}
 
-		});
+		});	
+		
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
@@ -100,10 +102,10 @@ public class Gui extends JPanel {
 
 		gbc.gridx = 0;
 		gbc.gridy = 3;
-		add(WorksheetButton, gbc);
+		add(worksheetButton, gbc);
 
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		add(infoField, gbc);
 	}
 }
