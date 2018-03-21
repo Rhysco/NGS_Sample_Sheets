@@ -69,8 +69,7 @@ public class ExportSampleSheet {
 		}else if(test.equalsIgnoreCase("TruSight One CES panel")){
 			exportTrusight(ws, index, "TRUSIGHTONE", truOneRow, "Y:\\samplesheet-templates\\TrusightOne.xls");
 		}else if (test.equalsIgnoreCase("TAM panel") && test.equalsIgnoreCase("CRM panel")){
-			// COMBINED ONE HERE... SEE OVERLOADED METHOD
-			// HERE IN CASE ITS NEEDED
+			// COMBINED ONE HERE... OVERLOADED METHOD HERE IF IT'S NEEDED
 		}else if(test.equalsIgnoreCase("TAM panel")){
 			exportCRUKTAM(ws, index, "TAM", tamRow, "Y:\\samplesheet-templates\\TAMGeneRead.xls");
 		}else if(test.equalsIgnoreCase("CRM panel")){
@@ -118,7 +117,6 @@ public class ExportSampleSheet {
 	 * @throws IOException Thrown if file cannot be saved
 	 */
 	private void save(HSSFWorkbook workbook, String type, String assay) throws IOException {
-		// Check save filepath
 		if (assay.equals("CRUK")) {
 			filepath = "L:\\Auto NGS Sample sheets\\CRUK\\";
 		} else if (assay.equals("Trusight")) {
@@ -131,20 +129,17 @@ public class ExportSampleSheet {
 			filepath = "L:\\Auto NGS Sample sheets\\Trusight One\\";
 		}
 		
-		// Check save location
 		if (type.equals("analysis")) {
 			fileSave = ("L:\\CRUK\\Nextera\\worksheets\\Analysis SampleSheets\\" + worksheetName + "_analysis" + ".xls");
 		} else {
 			fileSave = (filepath + worksheetName + ".xls");
 		}
-		// Save to shared drive
 		workbook.setSheetName(0, worksheetName);
 		FileOutputStream fileOut = new FileOutputStream(fileSave);
 		workbook.write(fileOut);
 		workbook.close();
 		fileOut.flush();
 		fileOut.close();
-		// open file
 		Desktop dt = Desktop.getDesktop();
 		dt.open(new File(fileSave));
 	}
@@ -344,7 +339,11 @@ public class ExportSampleSheet {
 			row = worksheet.getRow(rowNum);
 			cell = row.createCell(6);
 			if (ws.getComments().get(i) == null){
-				cell.setCellValue(focus4Pipeline);
+				// Removed as per request from Hood 08/01/2017
+				// Rhys could you please amend the macro so that if a sample has nothing in the 'comments' box - no analysis pipeline is assigned to it.
+				// This would make it easier for something reviewing the samplesheet to spot that something is missing in SHIRE. 
+				
+				//cell.setCellValue(focus4Pipeline);
 			}else if(ws.getComments().get(i).equalsIgnoreCase("FOCUS4")
 					|| ws.getComments().get(i).equalsIgnoreCase("FOCUS 4")
 					|| ws.getComments().get(i).equalsIgnoreCase("GIST")){
@@ -426,19 +425,21 @@ public class ExportSampleSheet {
 						cell = row.createCell(6);
 						cell.setCellValue(tamPipeline);
 					}
-					//increment amount
 					amount++;
 				}
 				rowNum += 1;
 			}
 			
-			// row number + skip amount
 			rowNum = 14 + skip;
 			for (int i = 0; i < ws.getComments().size(); i++) {
 				row = worksheet.getRow(rowNum);
 				cell = row.createCell(6);
 				if (ws.getComments().get(i) == null){
-					cell.setCellValue(focus4Pipeline);
+					// Removed as per request from Hood 08/01/2017
+					// Rhys could you please amend the macro so that if a sample has nothing in the 'comments' box - no analysis pipeline is assigned to it.
+					// This would make it easier for something reviewing the samplesheet to spot that something is missing in SHIRE. 
+					
+					//cell.setCellValue(focus4Pipeline);
 				}else if(ws.getComments().get(i).equalsIgnoreCase("FOCUS4")
 						|| ws.getComments().get(i).equalsIgnoreCase("FOCUS 4")
 						|| ws.getComments().get(i).equalsIgnoreCase("GIST")){
