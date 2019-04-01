@@ -106,14 +106,18 @@ public class ImportWorksheet {
 					+ " DNA_WORKSHEET_DET.LABNO,"
 					+ " DNA_Worksheet.WORKSHEET,"
 					+ " DNA_Worksheet.UPDATEDBY,"
-					+ " DNA_WORKSHEET_DET.WORKSHEET"
-					+ " FROM (DNA_Worksheet"
-					+ " LEFT JOIN DNA_TEST"
-					+ " ON DNA_Worksheet.TEST = DNA_TEST.TEST)"
+					+ " DNA_WORKSHEET_DET.WORKSHEET,"
+					+ " PATIENT.SEX"
+					+ " FROM (((DNA_Worksheet LEFT JOIN DNA_TEST"
+					+ " ON [DNA_Worksheet].TEST = [DNA_TEST].TEST)"
 					+ " INNER JOIN DNA_WORKSHEET_DET"
-					+ " ON DNA_Worksheet.WORKSHEET = DNA_WORKSHEET_DET.WORKSHEET"
-					+ " WHERE (((DNA_Worksheet.WORKSHEET)=[DNA_WORKSHEET_DET].[WORKSHEET])"
-					+ " AND ((DNA_WORKSHEET_DET.WORKSHEET)=?))"
+					+ " ON [DNA_Worksheet].WORKSHEET = [DNA_WORKSHEET_DET].WORKSHEET)"
+					+ " LEFT OUTER JOIN [DNALAB]"
+					+ " ON [DNA_WORKSHEET_DET].LABNO = [DNALAB].LABNO)"
+					+ " LEFT OUTER JOIN [PATIENT]"
+					+ " ON [DNALAB].INTID = [PATIENT].INTID"
+					+ " WHERE ((([DNA_Worksheet].WORKSHEET)=[DNA_WORKSHEET_DET].[WORKSHEET])"
+					+ " AND (([DNA_WORKSHEET_DET].WORKSHEET)=?))"
 					+ " ORDER BY DNA_WORKSHEET_DET.POSITION ASC;");
 			
 
@@ -124,11 +128,13 @@ public class ImportWorksheet {
 					+ " DNALAB_TEST.COMMENTS FROM"
 					+ " DNALAB_TEST WHERE DNALAB_TEST.LABNO =?");
 
+			/*
 			PreparedStatement st3 = conn.prepareStatement("SELECT DISTINCTROW DNALAB.LABNO,"
 					+ " PATIENT.SEX"
 					+ " FROM PATIENT INNER JOIN DNA LAB"
 					+ " ON PATIENT.INTID = DNALAB.INTID"
 					+ " WHERE (((DNALAB.LABNO)=?");
+			 */
 
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
@@ -146,6 +152,7 @@ public class ImportWorksheet {
 				ws.setUser(getUser.getUser().toString());
 				ws.setTest(rs.getString("TEST"));
 				ws.setUpdateDate(rs.getString("UPDATEDDATE").substring(2, 10).replace("-", "/"));
+				System.out.println(rs.getString("SEX"));
 		
 				// Check if NGS worksheet
 				// Gets size - 1 to pick to the last entry
