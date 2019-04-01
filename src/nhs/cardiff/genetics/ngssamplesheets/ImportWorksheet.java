@@ -124,6 +124,12 @@ public class ImportWorksheet {
 					+ " DNALAB_TEST.COMMENTS FROM"
 					+ " DNALAB_TEST WHERE DNALAB_TEST.LABNO =?");
 
+			PreparedStatement st3 = conn.prepareStatement("SELECT DISTINCTROW DNALAB.LABNO,"
+					+ " PATIENT.SEX"
+					+ " FROM PATIENT INNER JOIN DNA LAB"
+					+ " ON PATIENT.INTID = DNALAB.INTID"
+					+ " WHERE (((DNALAB.LABNO)=?");
+
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				ws.setWorksheet(rs.getString("WORKSHEET").toString());
