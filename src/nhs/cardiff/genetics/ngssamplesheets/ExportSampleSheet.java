@@ -9,6 +9,7 @@ package nhs.cardiff.genetics.ngssamplesheets;
  * @version 1.3
  * 
  */
+import java.lang.*;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
@@ -103,7 +104,7 @@ public class ExportSampleSheet {
 		  wcbPipeline = properties.getProperty("WCB");
 		  brcaPipeline = properties.getProperty("BRCA");
 		  tamPipeline = properties.getProperty("TAM");
-		  
+
 		} catch (IOException e) {
 			
 		}
@@ -253,6 +254,7 @@ public class ExportSampleSheet {
 		cell.setCellValue(ws.getWorksheet().get(0));
 		worksheetName = (ws.getWorksheet().get(0));
 
+
 		for (int i = 0; i < ws.getLabNo().size(); i++) {
 			if(ws.getLabNo().get(i) != null){
 				row = worksheet.getRow(rowNum);
@@ -261,10 +263,25 @@ public class ExportSampleSheet {
 				cell = row.createCell(1);
 				cell.setCellValue(ws.getWorksheet().get(i));
 				cell = row.createCell(8);
+				String sex;
+
+				// Put sexes in ped file format
+				if (ws.getSexes().get(i) != null) {
+					if (ws.getSexes().get(i).equals("M")) {
+						sex = "1";
+					} else if (ws.getSexes().get(i).equals("F")) {
+						sex = "2";
+					} else {
+						sex = "0"; // Sex is not known
+					}
+				} else {
+					sex = "0";
+				}
+
 				if(select.equalsIgnoreCase("TRUSIGHT")){
-					cell.setCellValue(trusightPipeline);
+					cell.setCellValue(trusightPipeline + ";sex=" + sex);
 				}else if(select.equalsIgnoreCase("TRUSIGHTONE")){
-					cell.setCellValue(trusightOnePipeline);
+					cell.setCellValue(trusightOnePipeline + ";sex=" + sex);
 				}
 			}
 			rowNum += 1;

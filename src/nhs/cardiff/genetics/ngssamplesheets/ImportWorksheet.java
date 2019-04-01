@@ -128,13 +128,6 @@ public class ImportWorksheet {
 					+ " DNALAB_TEST.COMMENTS FROM"
 					+ " DNALAB_TEST WHERE DNALAB_TEST.LABNO =?");
 
-			/*
-			PreparedStatement st3 = conn.prepareStatement("SELECT DISTINCTROW DNALAB.LABNO,"
-					+ " PATIENT.SEX"
-					+ " FROM PATIENT INNER JOIN DNA LAB"
-					+ " ON PATIENT.INTID = DNALAB.INTID"
-					+ " WHERE (((DNALAB.LABNO)=?");
-			 */
 
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
@@ -152,7 +145,7 @@ public class ImportWorksheet {
 				ws.setUser(getUser.getUser().toString());
 				ws.setTest(rs.getString("TEST"));
 				ws.setUpdateDate(rs.getString("UPDATEDDATE").substring(2, 10).replace("-", "/"));
-				System.out.println(rs.getString("SEX"));
+				ws.setSexes(rs.getString("SEX"));
 		
 				// Check if NGS worksheet
 				// Gets size - 1 to pick to the last entry
@@ -205,7 +198,7 @@ public class ImportWorksheet {
 
 	/**
 	 * 
-	 * @param arrayList String denoting the name of the test
+	 * @param arrayList denoting the name of the test
 	 * @return true if test a valid NGS test
 	 */
 	private boolean checkInputNGS(String test) {

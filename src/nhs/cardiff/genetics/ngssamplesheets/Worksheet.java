@@ -12,6 +12,7 @@ public class Worksheet {
 	private ArrayList<String> updateDate;
 	private ArrayList<String> panel;
 	private ArrayList<String> comments;
+	private ArrayList<String> sexes;
 	
 	public Worksheet(){
 		this.worksheet = new ArrayList<String>();
@@ -22,6 +23,7 @@ public class Worksheet {
 		this.updateDate = new ArrayList<String>();
 		this.panel = new ArrayList<String>();
 		this.comments = new ArrayList<String>();
+		this.sexes = new ArrayList<String>();
 	}
 
 	/**
@@ -150,6 +152,20 @@ public class Worksheet {
 	 */
 	public void setComments(String comments) {
 		this.comments.add(comments);
+	}
+
+	/**
+	 *
+	 * @return Returns sexes, The sex of the patient.
+	 */
+	public ArrayList<String> getSexes() { return sexes; }
+
+	/**
+	 *
+	 * @param sexes The sex of the patient.
+	 */
+	public void setSexes(String sexes) {
+		this.sexes.add(sexes);
 	}
 	
 }
