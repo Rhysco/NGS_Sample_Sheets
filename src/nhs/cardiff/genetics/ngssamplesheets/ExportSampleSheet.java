@@ -104,6 +104,7 @@ public class ExportSampleSheet {
 		  wcbPipeline = properties.getProperty("WCB");
 		  brcaPipeline = properties.getProperty("BRCA");
 		  tamPipeline = properties.getProperty("TAM");
+		  myeloidPipeline = properties.getProperty("MYELOID");
 
 		} catch (IOException e) {
 			
@@ -128,6 +129,8 @@ public class ExportSampleSheet {
 			filepath = "L:\\Auto NGS Sample sheets\\WCB\\";
 		} else if (assay.equals("Trusightone")) {
 			filepath = "L:\\Auto NGS Sample sheets\\Trusight One\\";
+		} else if (assay.equals()) {
+			filepath = "L:\\Auto NGS Sample sheets\\T\\";
 		}
 		
 		if (type.equals("analysis")) {
