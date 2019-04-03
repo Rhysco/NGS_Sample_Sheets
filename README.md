@@ -1,6 +1,9 @@
 # NGS_Sample_Sheets
 Sample sheet generator to run samples on NGS machines
 
+## Requirements
+uses Java version 1.6.0_45
+
 ## Dependencies: 
 Apache POI 3.15 for excel exporting
 JavaMail (v1.5.1)
