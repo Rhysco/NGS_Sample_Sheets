@@ -163,7 +163,8 @@ public class ImportWorksheet {
 								|| temp.equalsIgnoreCase("TAM panel") && (done == false)
 								|| temp.equalsIgnoreCase("CRM panel") && (done == false)
 								|| temp.equalsIgnoreCase("BRCA panel") && (done == false)
-								|| temp.equalsIgnoreCase("GeneRead pooled") && (done == false)){
+								|| temp.equalsIgnoreCase("GeneRead pooled") && (done == false)
+								|| temp.equalsIgnoreCase("Myeloid NGS Panel") && (done == false)){
 							ws.setPanel(temp);
 							ws.setComments(rs2.getString("COMMENTS"));
 							done = true;
@@ -208,7 +209,8 @@ public class ImportWorksheet {
 				|| (test.equals("TAM panel"))
 				|| (test.equals("CRM panel"))
 				|| (test.equals("BRCA panel"))
-				|| (test.equals("GeneRead pooled"))) {
+				|| (test.equals("GeneRead pooled"))
+				| (test.equals("Myeloid NGS Panel"))) {
 			goNGS = true;
 		} else {
 			goNGS = false;

@@ -33,12 +33,14 @@ public class ExportSampleSheet {
 	private String wcbPipeline;
 	private String brcaPipeline;
 	private String tamPipeline;
+	private String myeloidPipeline;
 	private int crukRow;
 	//private int crukAnRow;
 	private int truRow;
 	private int truOneRow;
 	private int tamRow;
 	private int wcbRow;
+	private int myeloidRow;
 	
 	public ExportSampleSheet() {
 		properties();
@@ -49,6 +51,7 @@ public class ExportSampleSheet {
 		truOneRow = 17;
 		tamRow = 14;
 		wcbRow = 14;
+		myeloidRow = 17;
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class ExportSampleSheet {
 		if(test.equalsIgnoreCase("NEXTERA NGS")){
 			// OLD SINGLE INDEX
 			//exportCRUKTAM(ws, index, "CRUK", crukRow, "Y:\\samplesheet-templates\\CRUK-SeqOnly.xls");
-			exportCRUKTAM(ws, index, "CRUK", crukRow, "Y:\\samplesheet-templates\\CRUK-SeqOnly-DualIndex.xls");
+			exportCRUKTAMMye(ws, index, "CRUK", crukRow, "Y:\\samplesheet-templates\\CRUK-SeqOnly-DualIndex.xls");
 			// ANALYSIS SHEET NO LONGER REQUIRED
 			//exportCRUKTAM(ws, index, "ANALYSIS", crukAnRow, "Y:\\samplesheet-templates\\CRUK-analysis.xls");
 		}else if(test.equalsIgnoreCase("TruSight Cancer")){
@@ -72,11 +75,13 @@ public class ExportSampleSheet {
 		}else if (test.equalsIgnoreCase("TAM panel") && test.equalsIgnoreCase("CRM panel")){
 			// COMBINED ONE HERE... OVERLOADED METHOD HERE IF IT'S NEEDED
 		}else if(test.equalsIgnoreCase("TAM panel")){
-			exportCRUKTAM(ws, index, "TAM", tamRow, "Y:\\samplesheet-templates\\TAMGeneRead.xls");
+			exportCRUKTAMMye(ws, index, "TAM", tamRow, "Y:\\samplesheet-templates\\TAMGeneRead.xls");
 		}else if(test.equalsIgnoreCase("CRM panel")){
-			exportWCB(ws, index, "CRM", wcbRow, "Y:\\samplesheet-templates\\WCB.xls");		
-		}	
-	}	
+			exportWCB(ws, index, "CRM", wcbRow, "Y:\\samplesheet-templates\\WCB.xls");
+		}else if(test.equalsIgnoreCase("Myeloid NGS Panel")){
+			exportCRUKTAMMye(ws, index, "MYELOID", myeloidRow, "Y:\\samplesheet-templates\\Myeloid.xls");
+	}
+}
 
 	/**
 	 * 
@@ -129,8 +134,8 @@ public class ExportSampleSheet {
 			filepath = "L:\\Auto NGS Sample sheets\\WCB\\";
 		} else if (assay.equals("Trusightone")) {
 			filepath = "L:\\Auto NGS Sample sheets\\Trusight One\\";
-		} else if (assay.equals()) {
-			filepath = "L:\\Auto NGS Sample sheets\\T\\";
+		} else if (assay.equals("myeloid")) {
+			filepath = "L:\\Auto NGS Sample sheets\\Myeloid\\";
 		}
 		
 		if (type.equals("analysis")) {
@@ -157,7 +162,7 @@ public class ExportSampleSheet {
 	 * @param file Filepath string for file save location
 	 * @throws IOException Thrown if file cannot be saved
 	 */
-	private void exportCRUKTAM(Worksheet ws, ArrayList<Index> index, String select, int rowNum, String file) throws IOException {
+	private void exportCRUKTAMMye(Worksheet ws, ArrayList<Index> index, String select, int rowNum, String file) throws IOException {
 		FileInputStream fileIn = new FileInputStream(file);
 		HSSFWorkbook workbook = new HSSFWorkbook(fileIn);
 		HSSFSheet worksheet = workbook.getSheet("Sheet1");
@@ -219,6 +224,12 @@ public class ExportSampleSheet {
 					cell.setCellValue(ws.getWorksheet().get(i));
 					cell = row.createCell(6);
 					cell.setCellValue(tamPipeline);
+
+				}else if(select.equalsIgnoreCase("MYELOID")){
+					// SPECIFIC TO Myeloid
+					cell.setCellValue(ws.getWorksheet().get(i));
+					cell = row.createCell(8);
+					cell.setCellValue(myeloidPipeline);
 				}
 
 			}
@@ -231,6 +242,8 @@ public class ExportSampleSheet {
 			save(workbook, "analysis", "CRUK");
 		}else if(select.equalsIgnoreCase("TAM")){
 			save(workbook, "", "TAM");
+		}else if(select.equalsIgnoreCase("MYELOID")){
+			save(workbook, "", "myeloid");
 		}
 
 	}
