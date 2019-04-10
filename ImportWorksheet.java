@@ -151,6 +151,7 @@ public class ImportWorksheet {
 				// Gets size - 1 to pick to the last entry
 				goNGS = checkInputNGS(ws.getTest().get(ws.getTest().size() - 1));
 				st2.setString(1, ws.getLabNo().get(ws.getLabNo().size() - 1));
+
 				if (goNGS && ws.getLabNo() != null) {
 					ResultSet rs2 = st2.executeQuery();
 					done = false;
@@ -164,11 +165,12 @@ public class ImportWorksheet {
 								|| temp.equalsIgnoreCase("CRM panel") && (done == false)
 								|| temp.equalsIgnoreCase("BRCA panel") && (done == false)
 								|| temp.equalsIgnoreCase("GeneRead pooled") && (done == false)
-								|| temp.equalsIgnoreCase("Myeloid NGS Panel") && (done == false)){
+								|| temp.equalsIgnoreCase("haem NGS") && (done == false)){
 							ws.setPanel(temp);
 							ws.setComments(rs2.getString("COMMENTS"));
 							done = true;
 						}
+
 					}	
 				} else if (!goNGS) {
 					Exception ex = new Exception("Not a Valid NGS worksheet, please try again");
@@ -210,7 +212,7 @@ public class ImportWorksheet {
 				|| (test.equals("CRM panel"))
 				|| (test.equals("BRCA panel"))
 				|| (test.equals("GeneRead pooled"))
-				| (test.equals("Myeloid NGS Panel"))) {
+				| (test.equals("haem NGS"))) {
 			goNGS = true;
 		} else {
 			goNGS = false;

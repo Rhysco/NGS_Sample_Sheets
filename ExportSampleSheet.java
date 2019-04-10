@@ -78,7 +78,7 @@ public class ExportSampleSheet {
 			exportCRUKTAMMye(ws, index, "TAM", tamRow, "Y:\\samplesheet-templates\\TAMGeneRead.xls");
 		}else if(test.equalsIgnoreCase("CRM panel")){
 			exportWCB(ws, index, "CRM", wcbRow, "Y:\\samplesheet-templates\\WCB.xls");
-		}else if(test.equalsIgnoreCase("Myeloid NGS Panel")){
+		}else if(test.equalsIgnoreCase("haem NGS")){
 			exportCRUKTAMMye(ws, index, "MYELOID", myeloidRow, "Y:\\samplesheet-templates\\Myeloid.xls");
 	}
 }
