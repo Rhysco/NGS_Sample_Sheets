@@ -1,8 +1,7 @@
 # NGS_Sample_Sheets
 Sample sheet generator to run samples on NGS machines
 
-<<<<<<< HEAD
-Dependencies: 
+## Dependencies: 
 Apache POI 3.15 for excel exporting
 
 URL:
