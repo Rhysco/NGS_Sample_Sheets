@@ -1,12 +1,6 @@
 # NGS_Sample_Sheets
 Sample sheet generator to run samples on NGS machines
 
-## Dependencies: 
-Apache POI 3.15 for excel exporting
-
-URL:
-http://poi.apache.org
-=======
 ## Requirements
 uses Java version 1.6.0_45
 
@@ -25,4 +19,3 @@ http://poi.apache.org
 ## When updating to support a new panel
 * The pipelines.properties file in Y:\samplesheet-templates must be updated to include the properties used by the new pipeline to be included in the sample sheet.
 * A new template .xls file (in Y:\samplesheet-templates must be generated to support the new panel- see existing templates for format. Ensure indices are correct.
->>>>>>> dbf6c4820561fb25c0e502da17ece0b437a8f611
