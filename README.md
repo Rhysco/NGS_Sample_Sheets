@@ -18,3 +18,4 @@ http://poi.apache.org
 
 ## When updating to support a new panel
 * The pipelines.properties file in Y:\samplesheet-templates must be updated to include the properties used by the new pipeline to be included in the sample sheet.
+* A new template .xls file (in Y:\samplesheet-templates must be generated to support the new panel- see existing templates for format. Ensure indices are correct.
