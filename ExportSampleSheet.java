@@ -218,13 +218,11 @@ public class ExportSampleSheet {
 						 //INDEX BASES
 						cell = row.createCell(7);
 						cell.setCellValue(ind.getIndexSelect().toString());
-
-						// SPECIFIC TO CRUK
-                        cell.setCellValue(ws.getWorksheet().get(i));
-                        cell = row.createCell(9);
-                        cell.setCellValue(crukPipeline);
 					}
 
+					// SPECIFIC TO CRUK
+					cell = row.createCell(9);
+					cell.setCellValue(crukPipeline);
 
 				}else if(select.equalsIgnoreCase("TAM")){
 					// SPECIFIC TO TAM
