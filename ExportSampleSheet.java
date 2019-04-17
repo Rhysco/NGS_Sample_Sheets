@@ -221,7 +221,7 @@ public class ExportSampleSheet {
 
 						// SPECIFIC TO CRUK
                         cell.setCellValue(ws.getWorksheet().get(i));
-                        cell = row.createCell(8);
+                        cell = row.createCell(9);
                         cell.setCellValue(crukPipeline);
 					}
 
