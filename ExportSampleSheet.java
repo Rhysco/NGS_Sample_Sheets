@@ -4,9 +4,9 @@
 package nhs.cardiff.genetics.ngssamplesheets;
 
 /**
- * @author Rhys Cooper
- * @Date 14/08/2017
- * @version 1.3
+ * @author Rhys Cooper & Sara Rey
+ * @Date 17/04/2019
+ * @version 1.4.3
  * 
  */
 import java.lang.*;
@@ -33,6 +33,7 @@ public class ExportSampleSheet {
 	private String wcbPipeline;
 	private String brcaPipeline;
 	private String tamPipeline;
+	private String crukPipeline;
 	private String myeloidPipeline;
 	private int crukRow;
 	//private int crukAnRow;
@@ -109,6 +110,7 @@ public class ExportSampleSheet {
 		  wcbPipeline = properties.getProperty("WCB");
 		  brcaPipeline = properties.getProperty("BRCA");
 		  tamPipeline = properties.getProperty("TAM");
+		  crukPipeline = properties.getProperty("CRUK");
 		  myeloidPipeline = properties.getProperty("MYELOID");
 
 		} catch (IOException e) {
@@ -216,6 +218,11 @@ public class ExportSampleSheet {
 						 //INDEX BASES
 						cell = row.createCell(7);
 						cell.setCellValue(ind.getIndexSelect().toString());
+
+						// SPECIFIC TO CRUK
+                        cell.setCellValue(ws.getWorksheet().get(i));
+                        cell = row.createCell(8);
+                        cell.setCellValue(crukPipeline);
 					}
 
 
