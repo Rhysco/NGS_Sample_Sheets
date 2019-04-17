@@ -309,10 +309,11 @@ public class ExportSampleSheet {
 		}
 		
 		if(select.equalsIgnoreCase("TRUSIGHT")){
-			rowNum = 14;
+			rowNum = truRow;
 		}else if(select.equalsIgnoreCase("TRUSIGHTONE")){
-			rowNum = 17;
+			rowNum = truOneRow;
 		}
+		/*
 		for (int i = 0; i < ws.getComments().size(); i++) {
 			if(ws.getComments().get(i) != null){
 				row = worksheet.getRow(rowNum);
@@ -321,7 +322,7 @@ public class ExportSampleSheet {
 			}
 			rowNum += 1;
 		}
-		
+		*/
 		if(select.equalsIgnoreCase("TRUSIGHT")){
 			save(workbook, "", "Trusight");
 		}else if(select.equalsIgnoreCase("TRUSIGHTONE")){
